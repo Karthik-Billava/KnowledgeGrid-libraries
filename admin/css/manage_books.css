@@ -1,215 +1,363 @@
-:root {
-    --primary-color: #0056b3;
-    --primary-hover: #003d80;
-    --secondary-color: #f4f4f4;
-    --text-color: #333;
-    --text-light: #fefefe;
-    --border-color: #ddd;
-    --header-height: 70px;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --card-radius: 8px;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
-.page-content {
-    padding: 3rem 0;
-}
-
-.management-section {
-    background: #fff;
-    padding: 2.5rem;
-    border-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border-color);
-    margin-bottom: 3rem;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-}
-
-@media (min-width: 768px) {
-    .form-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .form-group.full-width {
-        grid-column: 1 / -1;
-    }
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 1rem;
-    font-family: inherit;
-}
-
-.form-group textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.form-group select[multiple] {
-    display: none;
-    /* Hide the original select */
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
-}
-
-/* Custom Multi-select Dropdown */
-.custom-multiselect {
-    position: relative;
-}
-
-.select-box {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 1rem;
-    font-family: inherit;
-    cursor: pointer;
+/* Alert Styles */
+.alert {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    animation: slideIn 0.3s ease-out;
 }
 
-.select-box::after {
-    content: '\f078';
-    /* Font Awesome down arrow */
-    font-family: 'Font Awesome 6 Free';
+.alert::before {
+    font-family: "Font Awesome 6 Free";
     font-weight: 900;
 }
 
-.options-container {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    max-height: 200px;
-    overflow-y: auto;
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
-.options-container.active {
+.alert-success::before {
+    content: "\f00c";
+    color: #28a745;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-error::before {
+    content: "\f071";
+    color: #dc3545;
+}
+
+/* Form Styles */
+.form-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.book-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 0.5rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+label {
     display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 500;
 }
 
-.option {
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dce4ec;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+}
+
+/* Books Grid */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.book-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.book-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.book-card-content {
+    padding: 1.5rem;
+}
+
+.book-title {
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+    font-size: 1.25rem;
+}
+
+.book-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.book-details p {
+    margin: 0;
     display: flex;
     align-items: center;
-    padding: 0.5rem 0.75rem;
-    cursor: pointer;
+    gap: 0.5rem;
+    color: #7f8c8d;
 }
 
-.option:hover {
-    background-color: var(--secondary-color);
+.book-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
 }
 
-.option input {
-    margin-right: 0.5rem;
+/* Book Actions */
+.book-actions {
+    padding: 1rem 1.5rem;
+    background: #f8f9fa;
+    border-top: 1px solid #eee;
 }
 
-.management-section .btn-primary {
-    width: 100%;
-    padding-top: 0.8rem;
-    padding-bottom: 0.8rem;
+.primary-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.library-mapping {
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
     margin-top: 1rem;
 }
 
-.table-container {
-    overflow-x: auto;
-    border: 1px solid var(--border-color);
-    border-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
-}
-
-.books-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-.books-table th,
-.books-table td {
-    padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.books-table thead {
-    background-color: var(--secondary-color);
-}
-
-.books-table th {
-    font-weight: 600;
-}
-
-.books-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.books-table tbody tr:hover {
-    background-color: #f9f9f9;
-}
-
-.action-cell {
+.mapping-form {
     display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.mapping-inputs {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.library-select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #dce4ec;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
-    color: var(--text-light);
+    background: #3498db;
+    color: white;
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-hover);
+    background: #2980b9;
 }
 
-.btn-edit,
-.btn-delete {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-    border-radius: 4px;
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
 }
 
 .btn-edit {
-    background-color: #e3f2fd;
-    color: #1565c0;
+    background: #f39c12;
+    color: white;
 }
 
 .btn-edit:hover {
-    background-color: #bbdefb;
+    background: #d35400;
 }
 
 .btn-delete {
-    background-color: #ffebee;
-    color: #c62828;
+    background: #e74c3c;
+    color: white;
 }
 
 .btn-delete:hover {
-    background-color: #ffcdd2;
+    background: #c0392b;
+}
+
+.btn-map {
+    background: #2ecc71;
+    color: white;
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+.btn-map:hover {
+    background: #27ae60;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .books-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mapping-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .primary-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.book-card {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* No Books Message */
+.no-books {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: #7f8c8d;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Add to your existing styles */
+.library-mapping {
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.mapping-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.mapping-inputs {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.library-select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #dce4ec;
+}
+
+@media (max-width: 768px) {
+    .mapping-inputs {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Update the existing btn-map styles */
+.btn-map {
+    background: #2ecc71;
+    color: white;
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+.btn-map:hover {
+    background: #27ae60;
+    transform: translateY(-1px);
+}
+
+/* Add styles for mapped indicators */
+.mapped-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background: #2ecc71;
+    color: white;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
 }

@@ -1,6 +1,74 @@
 <?php
 $page_css = '/KnowledgeGrid-Libraries/assets/css/register.css';
 include_once '../includes/header.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Initialize error message
+$error_message = '';
+
+// Process form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once '../includes/db_connect.php';
+    
+    $name = trim($_POST['fullname'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirm = $_POST['confirm'] ?? '';
+    $location = trim($_POST['location'] ?? '');
+
+    if (empty($name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($location) || strlen($password) < 6) {
+        $error_message = 'Please fill all fields correctly. Password must be at least 6 characters.';
+    } elseif ($password !== $confirm) {
+        $error_message = 'Passwords do not match.';
+    } else {
+        $stmt = $conn->prepare('SELECT id FROM users WHERE email=?');
+        if ($stmt) {
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            if ($stmt->get_result()->num_rows > 0) {
+                $error_message = 'Email already registered. Please login.';
+            } else {
+                // Extract city and state
+                $parts = explode(',', $location);
+                $city = $parts[0] ?? $location;
+                $state = $parts[1] ?? '';
+                $hash = password_hash($password, PASSWORD_BCRYPT);
+                
+                // Create user
+                $stmt = $conn->prepare('INSERT INTO users (name,email,password_hash,location_city,location_state) VALUES (?,?,?,?,?)');
+                if ($stmt) {
+                    $stmt->bind_param('sssss', $name, $email, $hash, $city, $state);
+                    if ($stmt->execute()) {
+                        $uid = $conn->insert_id;
+                        
+                        // Get nearest library
+                        $lib_stmt = $conn->prepare('SELECT id FROM libraries WHERE LOWER(city)=LOWER(?) LIMIT 1');
+                        if ($lib_stmt) {
+                            $lib_stmt->bind_param('s', $city);
+                            $lib_stmt->execute();
+                            $result = $lib_stmt->get_result();
+                            $lib_id = ($result && $result->num_rows > 0) ? $result->fetch_assoc()['id'] : null;
+                            
+                            // Set session and redirect
+                            $_SESSION['user_id'] = $uid;
+                            $_SESSION['user_name'] = $name;
+                            $_SESSION['nearest_library_id'] = $lib_id;
+                            header('Location: /KnowledgeGrid-Libraries/user/explore.php');
+                            exit();
+                        }
+                    }
+                }
+                $error_message = 'Failed to create account. Please try again.';
+            }
+        } else {
+            $error_message = 'System error. Please try again later.';
+        }
+    }
+}
+
+
 ?>
 
 <main class="form-page-container">
@@ -209,8 +277,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_id'] = $uid;
                     $_SESSION['user_name'] = $name;
                     $_SESSION['nearest_library_id'] = $lib['id'] ?? null;
-                    // NOTE: Ensure this redirect path is correct.
-                    header('Location: /knowledgegrid-libraries/modules/user_interaction/explore.php');
+
+                    header('Location: C:/KnowledgeGrid-Libraries/user/explore.php');
                     exit;
                 } else {
                     $error_message = 'Could not create user account.';

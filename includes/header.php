@@ -1,7 +1,6 @@
 <?php
-if (session_status() === PHP_SESSION_NONE)
-    session_start();
-require_once __DIR__ . '/db_connect.php';
+session_start();
+require_once 'db_connect.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,61 +8,69 @@ require_once __DIR__ . '/db_connect.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KnowledgeGrid Libraries</title>
-    <!-- Font Awesome for icons (hamburger, login, etc.) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
-    <!-- Common css file -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/KnowledgeGrid-Libraries/assets/images/favicon.ico">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="/KnowledgeGrid-Libraries/assets/css/style.css">
-    <!-- Custom css file (modules specific) -->
-    <?php if (!empty($page_css)): ?>
+    <?php if (isset($page_css)): ?>
         <link rel="stylesheet" href="<?php echo htmlspecialchars($page_css); ?>">
     <?php endif; ?>
+    <link rel="stylesheet" href="/KnowledgeGrid-Libraries/includes/css/header.css">
 
+    <style>
+    </style>
 </head>
 <body>
-    <header class="site-header">
-        <div class="container header-container">
-            <!-- Left Side: Logo and Company Name -->
-            <a href="index.html" class="logo-container">
-                <i class="fa-solid fa-book-open-reader logo-icon"></i>
-                <span class="company-name">KnowledgeGrid</span>
+    <header class="header">
+        <div class="header-container">
+            <a href="/KnowledgeGrid-Libraries/" class="brand">
+                <i class="fa-solid fa-book-open-reader logo-icon" class="brand-logo"></i>
+                <h1 class="brand-name">KnowledgeGrid</h1>
             </a>
-            
 
-            <!-- Middle: Navigation Links -->
-            <nav class="main-nav" id="main-nav">
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="toggleNav()">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav class="navigation" id="main-nav">
                 <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Locations</a></li>
-                    <li><a href="#">Explore</a></li>
+                    <li><a href="/KnowledgeGrid-Libraries/" class="nav-link <?php echo empty($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '/KnowledgeGrid-Libraries/' ? 'active' : ''; ?>">Home</a></li>
+                    <li><a href="/KnowledgeGrid-Libraries/book/view_books.php" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], 'view_books.php') !== false ? 'active' : ''; ?>">Books</a></li>
+                    <li><a href="/KnowledgeGrid-Libraries/library/view_libraries.php" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], 'view_libraries.php') !== false ? 'active' : ''; ?>">Libraries</a></li>
+                    <?php if (is_admin_logged_in()): ?>
+                        <li><a href="/KnowledgeGrid-Libraries/admin/manage_books.php" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], 'manage_books.php') !== false ? 'active' : ''; ?>">Manage Books</a></li>
+                        <li><a href="/KnowledgeGrid-Libraries/admin/manage_libraries.php" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], 'manage_libraries.php') !== false ? 'active' : ''; ?>">Manage Libraries</a></li>
+                    <?php endif; ?>
                 </ul>
-            </nav>
 
-            <!-- Right Side: Login/Logout and Hamburger -->
-            <div class="header-right">
-                <?php if (is_admin_logged_in()): ?>
-                        <span class="btn btn-login" title="You are logged in as admin">Admin</span>
-                        <a href="/KnowledgeGrid-Libraries/modules/library_management/manage_library.php"
-                            class="btn btn-login">Manage Libraries</a>
-                        <a href="/KnowledgeGrid-Libraries/modules/book_management/manage_books.php" class="btn btn-login">Manage
-                            Books</a>
-                    <?php endif; ?>
-                    <?php if (is_user_logged_in()): ?>
-                        <span class="muted">Hello, <?php echo htmlspecialchars(current_user_name()); ?></span>
-                        <a href="/KnowledgeGrid-Libraries/modules/borrow_purchase/my_books.php" class="btn btn-login">My Books</a>
-                        <a href="/KnowledgeGrid-Libraries/auth/logout.php" class="btn btn-login" aria-label="Logout"><i
-                                class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Logout</a>
+                <div class="user-actions">
+                    <?php if (is_logged_in()): ?>
+                        <div class="user-menu">
+                            <div class="user-profile">
+                                <div class="user-avatar">
+                                    <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)); ?>
+                                </div>
+                                <span><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'User'); ?></span>
+                            </div>
+                        </div>
+                        <a href="/KnowledgeGrid-Libraries/auth/logout.php" class="btn btn-login">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
                     <?php else: ?>
-                        <a href="auth/login.php" class="btn btn-login"><i class="fa-solid fa-user"
-                                aria-hidden="true"></i>
-                            Login</a>
-                        <a href="auth/register.php" class="btn btn-login"><i class="fa-solid fa-user-plus"
-                                aria-hidden="true"></i> Register</a>
+                        <a href="/KnowledgeGrid-Libraries/auth/login.php" class="btn btn-login">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                        <a href="/KnowledgeGrid-Libraries/auth/register.php" class="btn btn-login">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
                     <?php endif; ?>
-                <button class="hamburger" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="main-nav">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-            </div>
+                </div>
+            </nav>
         </div>
     </header>
+
+    <script src="/KnowledgeGrid-Libraries/includes/js/header.js"></script>

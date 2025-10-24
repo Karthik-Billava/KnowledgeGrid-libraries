@@ -1,8 +1,23 @@
-
 <?php
 $page_css = '/KnowledgeGrid-Libraries/book/css/view_books.css';
 include_once '../includes/header.php';
+
+// Fetch books with availability info
+$stmt = $conn->prepare('
+    SELECT b.*, 
+           GROUP_CONCAT(DISTINCT l.name) as libraries,
+           MIN(lb.price) as min_price,
+           SUM(lb.available_count) as total_available
+    FROM books b
+    LEFT JOIN library_books lb ON b.id = lb.book_id
+    LEFT JOIN libraries l ON lb.library_id = l.id
+    GROUP BY b.id
+    ORDER BY b.title
+');
+$stmt->execute();
+$books = $stmt->get_result();
 ?>
+
 <main>
     <section class="page-content container">
         <div class="search-section">
@@ -28,74 +43,53 @@ include_once '../includes/header.php';
 
         <!-- BOOKS GRID -->
         <div class="books-grid" id="books-grid">
-            <!-- Books will be dynamically filtered here -->
-            <div class="book-card" data-genre="mystery">
-                <img src="https://images.unsplash.com/photo-1588666301433-1428a49c4033?w=500&auto=format&fit=crop" alt="Book cover for Mystery of the Old Mansion" class="book-cover-image">
-                <div class="book-card-content">
-                    <h3>Mystery of the Old Mansion</h3>
-                    <p class="description">A thrilling whodunit set in a remote, forgotten estate with a dark past.</p>
-                    <a href="#" class="btn">View Book</a>
+            <?php while($book = $books->fetch_assoc()): ?>
+                <div class="book-card" data-genre="<?php echo htmlspecialchars(strtolower($book['genre'] ?? 'uncategorized')); ?>">
+                    <img src="<?php echo !empty($book['cover_image']) ? htmlspecialchars($book['cover_image']) : 'https://via.placeholder.com/500x750.png?text=No+Cover'; ?>" 
+                         alt="Book cover for <?php echo htmlspecialchars($book['title']); ?>" 
+                         class="book-cover-image">
+                    
+                    <div class="book-card-content">
+                        <h3><?php echo htmlspecialchars($book['title']); ?></h3>
+                        <p class="description">
+                            <?php 
+                            if (!empty($book['description'])) {
+                                echo htmlspecialchars(substr($book['description'], 0, 150)) . '...';
+                            } else {
+                                echo 'No description available.';
+                            }
+                            ?>
+                        </p>
+                        <div class="book-metadata">
+                            <?php if ($book['total_available'] > 0): ?>
+                                <span class="availability">
+                                    <i class="fas fa-check"></i> Available
+                                </span>
+                                <span class="price">
+                                    From ₹<?php echo number_format($book['min_price'], 2); ?>
+                                </span>
+                            <?php else: ?>
+                                <span class="availability unavailable">
+                                    <i class="fas fa-times"></i> Currently Unavailable
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                        <a href="/KnowledgeGrid-Libraries/book/book_details.php?id=<?php echo (int)$book['id']; ?>" 
+                           class="btn">View Book</a>
+                    </div>
                 </div>
-            </div>
-                <div class="book-card" data-genre="fiction">
-                <img src="https://images.unsplash.com/photo-1611689103233-39a7d30560a0?w=500&auto=format&fit=crop" alt="Book cover for The Great Adventure" class="book-cover-image">
-                <div class="book-card-content">
-                    <h3>The Great Adventure</h3>
-                    <p class="description">An epic journey across uncharted lands, filled with danger and discovery.</p>
-                    <a href="#" class="btn">View Book</a>
+            <?php endwhile; ?>
+
+            <?php if ($books->num_rows === 0): ?>
+                <div class="no-books-message">
+                    <i class="fas fa-books"></i>
+                    <p>No books available at the moment.</p>
                 </div>
-            </div>
-            <div class="book-card" data-genre="science">
-                <img src="https://images.unsplash.com/photo-1581373449483-348a83a45c0f?w=500&auto=format&fit=crop" alt="Book cover for A History of Time" class="book-cover-image">
-                <div class="book-card-content">
-                    <h3>A History of Time</h3>
-                    <p class="description">An exploration of the universe, from the big bang to black holes.</p>
-                    <a href="#" class="btn">View Book</a>
-                </div>
-            </div>
-            <div class="book-card" data-genre="non-fiction">
-                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop" alt="Book cover for Cooking for Beginners" class="book-cover-image">
-                <div class="book-card-content">
-                    <h3>Cooking for Beginners</h3>
-                    <p class="description">Master the basics of cooking with over 100 simple and delicious recipes.</p>
-                    <a href="#" class="btn">View Book</a>
-                </div>
-            </div>
-                <div class="book-card" data-genre="fantasy">
-                <img src="https://images.unsplash.com/photo-1579487785973-74d2ca7abdd5?w=500&auto=format&fit=crop" alt="Book cover for The Dragon's Prophecy" class="book-cover-image">
-                <div class="book-card-content">
-                    <h3>The Dragon's Prophecy</h3>
-                    <p class="description">A young hero must unite a divided kingdom against an ancient evil.</p>
-                    <a href="#" class="btn">View Book</a>
-                </div>
-            </div>
-            <div class="book-card" data-genre="history">
-                <img src="https://images.unsplash.com/photo-1474366521946-c3d4b508a3f0?w=500&auto=format&fit=crop" alt="Book cover for The Roman Empire" class="book-cover-image">
-                <div class="book-card-content">
-                    <h3>The Roman Empire</h3>
-                    <p class="description">A detailed account of the rise and fall of one of history's greatest civilizations.</p>
-                    <a href="#" class="btn">View Book</a>
-                </div>
-            </div>
-                <div class="book-card" data-genre="biography">
-                <img src="https://images.unsplash.com/photo-1513001900722-370f803f498d?w=500&auto=format&fit=crop" alt="Book cover for The Inventor's Life" class="book-cover-image">
-                <div class="book-card-content">
-                    <h3>The Inventor's Life</h3>
-                    <p class="description">The inspiring story of a brilliant mind who changed the world with her creations.</p>
-                    <a href="#" class="btn">View Book</a>
-                </div>
-            </div>
-            <div class="book-card" data-genre="fiction">
-                <img src="https://images.unsplash.com/photo-1521123845562-34a0d9221355?w=500&auto=format&fit=crop" alt="Book cover for Echoes of the Future" class="book-cover-image">
-                <div class="book-card-content">
-                    <h3>Echoes of the Future</h3>
-                    <p class="description">A mind-bending science fiction novel about time travel and its consequences.</p>
-                    <a href="#" class="btn">View Book</a>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
     </section>
 </main>
+
 <?php
 $page_script = '/KnowledgeGrid-Libraries/book/js/view_books.js';
 require_once '../includes/footer.php';

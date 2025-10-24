@@ -1,0 +1,96 @@
+:root {
+    --primary-color: #0056b3;
+    --primary-hover: #003d80;
+    --secondary-color: #f4f4f4;
+    --text-color: #333;
+    --text-light: #fefefe;
+    --border-color: #ddd;
+    --accept-color: #2e7d32;
+    --reject-color: #c62828;
+    --header-height: 70px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --card-radius: 8px;
+}
+
+.btn-accept {
+    background-color: #e8f5e9;
+    color: var(--accept-color);
+}
+.btn-accept:hover {
+    background-color: #c8e6c9;
+}
+
+.btn-reject {
+    background-color: #ffebee;
+    color: var(--reject-color);
+}
+.btn-reject:hover {
+    background-color: #ffcdd2;
+}
+
+        /* Status Tags */
+.status-tag {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.status-requested {
+    background-color: #fff8e1;
+    color: #f57f17;
+}
+.status-approved {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+.status-rejected {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+
+.page-content {
+    padding: 3rem 0;
+}
+
+.table-container {
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.transactions-table th, .transactions-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.transactions-table thead {
+    background-color: var(--secondary-color);
+}
+
+.transactions-table th {
+    font-weight: 600;
+}
+
+.transactions-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.action-cell {
+    display: flex;
+    gap: 0.5rem;
+}

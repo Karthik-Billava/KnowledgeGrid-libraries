@@ -1,26 +1,24 @@
 <?php
-if (!defined('DB_HOST')) {
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('DB_NAME', 'knowledgegrid');
-}
+$conn = new mysqli('localhost', 'root', '', 'knowledgegrid');
 
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if ($conn->connect_error) {
-    die('Database connection failed: ' . htmlspecialchars($conn->connect_error));
+    die('Connection failed: ' . $conn->connect_error);
 }
 $conn->set_charset('utf8mb4');
 
-// Common helpers
-function is_admin_logged_in(): bool
-{
-    return isset($_SESSION['admin_id']);
+// Helper functions - define them only once here
+if (!function_exists('is_logged_in')) {
+    function is_logged_in() {
+        return isset($_SESSION['user_id']);
+    }
 }
-function is_user_logged_in(): bool
-{
-    return isset($_SESSION['user_id']);
+
+if (!function_exists('is_admin_logged_in')) {
+    function is_admin_logged_in() {
+        return isset($_SESSION['user_id']) && isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
+    }
 }
+
 function current_user_name(): string
 {
     return $_SESSION['user_name'] ?? '';

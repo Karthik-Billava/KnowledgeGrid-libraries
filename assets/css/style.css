@@ -472,3 +472,7 @@ h2 {
     width: 70%;
 }
 }
+
+a .active::after{
+    width: 100%;
+}

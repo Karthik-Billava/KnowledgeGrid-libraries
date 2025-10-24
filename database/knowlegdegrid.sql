@@ -4,7 +4,10 @@ CREATE TABLE IF NOT EXISTS `libraries` (
   `name` VARCHAR(120) NOT NULL,
   `city` VARCHAR(80) NOT NULL,
   `state` VARCHAR(80) NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  `created_at` TIMESTAMP DEFAULT 
+  'cover_image' VARCHAR(255) NULL,
+  CURRENT_TIMESTAMP,
+  `map_url` VARCHAR(255) NULL
 );
 
 --Library Images
@@ -24,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `genre` VARCHAR(80) NULL,
   `isbn` VARCHAR(20) NULL,
   `description` TEXT NULL,
+  `cover_image` VARCHAR(255) NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
