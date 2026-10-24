@@ -27,9 +27,9 @@ if (!$book) {
         <div class="book-details-grid">
             <!-- Image Carousel -->
             <div class="image-carousel-container">
-                <img src="/KnowledgeGrid-Libraries/assets/images/book_covers/common.jpg" alt="<?php echo htmlspecialchars($book['title']); ?>" class="main-book-image" id="main-book-image">
-                <button class="carousel-btn prev-btn" id="prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
-                <button class="carousel-btn next-btn" id="next-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                <img src="https://images.unsplash.com/photo-1588666301433-1428a49c4033?w=500&auto=format&fit=crop" alt="Book cover for Mystery of the Old Mansion" class="main-book-image" id="main-book-image">
+                <button class="carousel-btn prev-btn" id="prev-btn" aria-label="Previous book cover image"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="carousel-btn next-btn" id="next-btn" aria-label="Next book cover image"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
 
             <!-- Book Info -->
